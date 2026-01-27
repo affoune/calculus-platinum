@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCULUS PLATINUM - PWA Edition</title>
+    
+    <!-- ====== PWA META TAGS ====== -->
+    <meta name="theme-color" content="#00f3ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Calculus Platinum">
+    <meta name="description" content="حاسبة المعدل الجامعي المتقدمة - تطبيق ويب متقدم">
+    <meta name="keywords" content="GPA, معدل, جامعة, حساب, درجات">
+    <meta name="author" content="Calculus Platinum">
+    
+    <!-- ====== SOCIAL META ====== -->
+    <meta property="og:title" content="Calculus Platinum">
+    <meta property="og:description" content="حاسبة المعدل الجامعي المتقدمة">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calculus-platinum.app">
+    <meta property="og:image" content="./icon.png">
+    
+    <!-- ====== ICONS ====== -->
+    <link rel="icon" href="./icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- ====== STYLES & FONTS ====== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap">
+    
+    <style>
+        /* ====== THEME VARIABLES ====== */
+        :root {
+            /* Dark Theme (Default) */
+            --bg-body: #09090b;
+            --bg-panel: #18181b;
+            --bg-input: #09090b;
+            --border-color: #27272a;
+            --text-main: #fafafa;
+            --text-mute: #a1a1aa;
+            --shadow: rgba(0,0,0,0.5);
+            
+            /* Accents */
+            --primary: #00f3ff;
+            --success: #00ff9d;
+            --danger: #ff2a6d;
+            --warning: #ffde00;
+            --glass: rgba(255,255,255,0.03);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f4f5;
+            --bg-panel: #ffffff;
+            --bg-input: #f4f4f5;
+            --border-color: #e4e4e7;
+            --text-main: #18181b;
+            --text-mute: #71717a;
+            --shadow: rgba(0,0,0,0.1);
+            
+            /* Adjusted Accents for Light Mode */
+            --primary: #006fee;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --glass: rgba(0,0,0,0.03);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
+        }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+
+        /* ====== HEADER ====== */
+        .header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 30px; 
+            padding: 20px; 
+            background: var(--bg-panel);
+            border-radius: 16px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow); 
+            position: relative; 
+            overflow: hidden;
+        }
+        
+        .header-content h1 { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+        }
+        .header-content span { 
+            color: var(--primary); 
+        }
+        
+        .theme-toggle {
+            background: var(--bg-input); 
+            border: 1px solid var(--border-color);
+            color: var(--text-main); 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%;
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.2rem; 
+            transition: 0.3s;
+        }
+        .theme-toggle:hover { 
+            border-color: var(--primary); 
+            color: var(--primary); 
+            transform: rotate(15deg); 
+        }
+
+        /* ====== INSTALL BUTTON ====== */
+        .install-btn {
+            display: none;
+            background: var(--success);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        /* ====== STATS ====== */
+        .stats-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px; 
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--bg-panel); 
+            padding: 20px; 
+            border-radius: 12px;
+            border: 1px solid var(--border-color); 
+            text-align: center;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+        .stat-val { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color: var(--primary); 
+            line-height: 1.2; 
+        }
+        .stat-label { 
+            font-size: 0.85rem; 
+            color: var(--text-mute); 
+            font-weight: 500; 
+        }
+
+        /* ====== CONTROLS ====== */
+        .controls { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            justify-content: center; 
+            margin-bottom: 30px; 
+        }
+        
+        .btn {
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn:active { 
+            transform: scale(0.96); 
+        }
+        
+        .btn-primary { 
+            background: var(--primary); 
+            color: #fff; 
+            box-shadow: 0 4px 15px -5px var(--primary); 
+        }
+        .btn-success { 
+            background: var(--success); 
+            color: #fff; 
+            box-shadow: 0 4px 15px -5px var(--success); 
+        }
+        .btn-danger { 
+            background: transparent; 
+            border: 1px solid var(--danger); 
+            color: var(--danger); 
+        }
+        .btn-danger:hover { 
+            background: var(--danger); 
+            color: #fff; 
+        }
+        .btn-secondary { 
+            background: var(--bg-panel); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-main); 
+        }
+        .btn-secondary:hover { 
+            border-color: var(--text-mute); 
+        }
+
+        /* ====== TABLE / CARDS ====== */
+        .table-wrapper {
+            background: var(--bg-panel); 
+            border-radius: 16px; 
+            overflow: hidden;
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 10px 40px -10px var(--shadow);
+        }
+        
+        .data-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        
+        .data-table th {
+            background: var(--glass); 
+            padding: 15px; 
+            text-align: right;
+            color: var(--text-mute); 
+            font-size: 0.8rem; 
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table td {
+            padding: 12px 15px; 
+            border-bottom: 1px solid var(--border-color); 
+            vertical-align: middle;
+        }
+        .data-table tr:last-child td { 
+            border-bottom: none; 
+        }
+        .data-table tr:hover { 
+            background: var(--glass); 
+        }
+
+        /* Inputs */
+        .inp {
+            background: var(--bg-input); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-main);
+            padding: 8px; 
+            border-radius: 6px; 
+            text-align: center; 
+            width: 70px;
+            font-size: 0.95rem; 
+            font-weight: 500;
+        }
+        .inp:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 2px rgba(var(--primary), 0.1); 
+        }
+        .inp-name { 
+            width: 100%; 
+            text-align: right; 
+            min-width: 140px; 
+        }
+        .inp-ghost { 
+            opacity: 0.3; 
+            pointer-events: none; 
+            border-style: dashed; 
+        }
+
+        /* Actions */
+        .actions { 
+            display: flex; 
+            gap: 5px; 
+        }
+        .icon-btn {
+            width: 32px; 
+            height: 32px; 
+            border-radius: 6px; 
+            border: none; 
+            background: transparent;
+            color: var(--text-mute); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .icon-btn:hover { 
+            background: var(--bg-input); 
+            color: var(--text-main); 
+        }
+        .btn-del:hover { 
+            color: var(--danger); 
+            background: rgba(255, 42, 109, 0.1); 
+        }
+        .btn-set:hover { 
+            color: var(--primary); 
+            background: rgba(0, 243, 255, 0.1); 
+        }
+
+        /* Avg Badge */
+        .avg-badge {
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            display: inline-block; 
+            min-width: 50px; 
+            text-align: center;
+        }
+
+        /* ====== CHARTS ====== */
+        .charts-area {
+            background: var(--bg-panel); 
+            border-radius: 16px; 
+            padding: 20px;
+            border: 1px solid var(--border-color); 
+            margin-top: 30px; 
+            display: none;
+        }
+        .chart-row { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 12px; 
+            gap: 15px; 
+        }
+        .chart-label { 
+            width: 120px; 
+            font-size: 0.9rem; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .chart-track { 
+            flex: 1; 
+            height: 10px; 
+            background: var(--bg-input); 
+            border-radius: 5px; 
+            overflow: hidden; 
+        }
+        .chart-bar { 
+            height: 100%; 
+            border-radius: 5px; 
+            transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        .chart-val { 
+            width: 40px; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+        }
+
+        /* ====== MOBILE CARDS ====== */
+        @media (max-width: 768px) {
+            .data-table thead { 
+                display: none; 
+            }
+            .data-table, .data-table tbody, .data-table tr, .data-table td { 
+                display: block; 
+                width: 100%; 
+            }
+            .data-table tr {
+                margin-bottom: 15px; 
+                border: 1px solid var(--border-color);
+                border-radius: 12px; 
+                background: var(--bg-panel); 
+                padding: 10px;
+                box-shadow: 0 2px 8px var(--shadow);
+            }
+            .data-table td {
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center;
+                padding: 10px 5px; 
+                border-bottom: 1px solid var(--border-color); 
+                text-align: left;
+            }
+            .data-table td:last-child { 
+                border-bottom: none; 
+                padding-top: 15px; 
+                justify-content: center; 
+            }
+            .data-table td::before {
+                content: attr(data-label); 
+                color: var(--text-mute); 
+                font-size: 0.85rem; 
+                font-weight: 600;
+            }
+            .inp { 
+                width: 80px; 
+            }
+            .inp-name { 
+                width: 100%; 
+                text-align: right; 
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* ====== MODAL ====== */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(4px); 
+            z-index: 1000;
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+        }
+        .modal-box {
+            background: var(--bg-panel); 
+            padding: 30px; 
+            border-radius: 20px; 
+            width: 400px; 
+            max-width: 100%;
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 20px 50px var(--shadow);
+            transform: translateY(20px); 
+            transition: 0.3s; 
+            opacity: 0;
+        }
+        .modal-overlay.active .modal-box { 
+            transform: translateY(0); 
+            opacity: 1; 
+        }
+        
+        .slider-row { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+        .slider-row label { 
+            flex: 1; 
+            font-size: 0.9rem; 
+        }
+        input[type="range"] { 
+            flex: 2; 
+            accent-color: var(--primary); 
+            cursor: pointer; 
+        }
+
+        /* ====== TOAST & INDICATOR ====== */
+        .toast {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(50px);
+            background: var(--bg-panel); 
+            color: var(--text-main); 
+            padding: 12px 25px; 
+            border-radius: 50px;
+            font-weight: 600; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
+            border: 1px solid var(--border-color);
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            opacity: 0; 
+            transition: 0.4s; 
+            z-index: 2000;
+        }
+        .toast.show { 
+            transform: translateX(-50%) translateY(0); 
+            opacity: 1; 
+        }
+        
+        .save-indicator {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: var(--glass);
+            color: var(--success); 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            border: 1px solid var(--success);
+            font-size: 0.75rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            opacity: 0; 
+            transition: 0.3s;
+        }
+        .save-indicator.show { 
+            opacity: 1; 
+        }
+        .spinner { 
+            width: 10px; 
+            height: 10px; 
+            border: 2px solid currentColor; 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            to {
+                transform: rotate(360deg);
+            } 
+        }
+
+        /* ====== PWA STATUS ====== */
+        .pwa-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            color: var(--text-mute);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- PWA Status Indicator -->
+    <div class="pwa-status" id="pwaStatus"></div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="saveInd">
+        <div class="spinner"></div> محفوظ
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>📊 CALCULUS <span>PLATINUM</span></h1>
+                <p style="color: var(--text-mute); font-size: 0.9rem;">تطبيق ويب متقدم لحساب المعدل الجامعي</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="install-btn" id="installBtn" style="display: none;">
+                    <i class="fas fa-download"></i> تثبيت التطبيق
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الوضع الليلي">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- JS Injected -->
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" onclick="addSubject()">
+                <i class="fas fa-plus"></i> إضافة مادة
+            </button>
+            <button class="btn btn-success" onclick="calculateFinalGPA()">
+                <i class="fas fa-calculator"></i> احسب المعدل
+            </button>
+            <button class="btn btn-secondary" onclick="exportData()">
+                <i class="fas fa-download"></i> تصدير
+            </button>
+            <button class="btn btn-secondary" onclick="document.getElementById('impFile').click()">
+                <i class="fas fa-upload"></i> استيراد
+            </button>
+            <input type="file" id="impFile" hidden accept=".json" onchange="importData(this)">
+            
+            <button class="btn btn-secondary" onclick="resetGradesOnly()" title="تصفير الدرجات فقط">
+                <i class="fas fa-eraser"></i> مسح العلامات
+            </button>
+            <button class="btn btn-danger" onclick="confirmReset()" title="تصفير كامل">
+                <i class="fas fa-trash-alt"></i> تصفير الكل
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="20%">المادة</th>
+                        <th width="8%">المعامل</th>
+                        <th width="12%">الامتحان</th>
+                        <th width="12%">TD</th>
+                        <th width="12%">TP</th>
+                        <th width="12%">أخرى</th>
+                        <th width="10%">المعدل</th>
+                        <th width="9%">تحكم</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- JS Injected -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-area" id="chartsArea">
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                <i class="fas fa-chart-bar" style="color: var(--primary);"></i> تحليل الأداء
+            </h3>
+            <div id="chartsContainer"></div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-box">
+            <h3 style="margin-bottom: 20px;">ضبط الأوزان (Weights)</h3>
+            <input type="hidden" id="editId">
+            
+            <!-- Dynamic Sliders generated by JS -->
+            <div id="slidersContainer"></div>
+
+            <div style="margin: 20px 0; padding: 10px; background: var(--bg-input); border-radius: 8px; text-align: center;">
+                <span id="totalPercent" style="font-weight: bold;">0%</span>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="saveSettings()">حفظ</button>
+                <button class="btn btn-secondary" style="flex: 1; justify-content: center;" onclick="closeModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <!-- MAIN SCRIPT -->
+    <script>
+        // ====== STATE ======
+        const defaultData = [
+            { id: 1, name: 'رياضيات', coef: 3, weights: {exam:60, td:40, tp:0, other:0}, grades: {exam:0, td:0, tp:0, other:0}, avg: 0 },
+            { id: 2, name: 'فيزياء', coef: 3, weights: {exam:60, td:20, tp:20, other:0}, grades: {exam:0, td:0, tp:0, other:0}, avg: 0 }
+        ];
+
+        let subjects = JSON.parse(localStorage.getItem('calc_plat_data')) || defaultData;
+        let theme = localStorage.getItem('calc_plat_theme') || 'dark';
+        let debounceTimer;
+
+        // ====== INIT ======
+        window.onload = () => {
+            applyTheme();
+            renderTable();
+            updateStats();
+            initPWA();
+        };
+
+        // ====== THEME SYSTEM ======
+        function toggleTheme() {
+            theme = theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('calc_plat_theme', theme);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // ====== PWA FUNCTIONS ======
+        function initPWA() {
+            // Update PWA status
+            updatePWAStatus();
+            
+            // Listen for online/offline events
+            window.addEventListener('online', () => {
+                showToast('🟢 الاتصال بالإنترنت معاد', 'success');
+                updatePWAStatus();
+            });
+            
+            window.addEventListener('offline', () => {
+                showToast('🔴 أنت غير متصل بالإنترنت', 'warning');
+                updatePWAStatus();
+            });
+            
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registered:', registration.scope);
+                        updatePWAStatus('Service Worker: نشط');
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    showToast('🔥 نسخة جديدة متاحة!', 'success');
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker registration failed:', error);
+                        updatePWAStatus('Service Worker: فشل');
+                    });
+            }
+            
+            // Handle install prompt
+            let deferredPrompt;
+            const installBtn = document.getElementById('installBtn');
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'flex';
+                
+                installBtn.addEventListener('click', () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            showToast('✅ تم تثبيت التطبيق!', 'success');
+                            installBtn.style.display = 'none';
+                        }
+                        deferredPrompt = null;
+                    });
+                });
+            });
+            
+            // Check if app is already installed
+            window.addEventListener('appinstalled', () => {
+                installBtn.style.display = 'none';
+                updatePWAStatus('التطبيق مثبت');
+            });
+            
+            // Detect standalone mode
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                updatePWAStatus('وضع التطبيق: مثبت');
+            }
+        }
+
+        function updatePWAStatus(status = '') {
+            const statusEl = document.getElementById('pwaStatus');
+            if (!status) {
+                status = navigator.onLine ? '🟢 متصل' : '🔴 غير متصل';
+                if ('serviceWorker' in navigator) status += ' | SW: نشط';
+                if (window.matchMedia('(display-mode: standalone)').matches) status += ' | مثبت';
+            }
+            statusEl.textContent = status;
+            statusEl.style.display = 'block';
+        }
+
+        // ====== LOGIC: SANITIZATION & CALCULATION ======
+        function parseGrade(val) {
+            if(val === '') return 0;
+            let str = val.toString().replace(',', '.');
+            let num = parseFloat(str);
+            if(isNaN(num)) return 0;
+            return Math.min(20, Math.max(0, num));
+        }
+
+        function calculateAvg(sub) {
+            const w = sub.weights;
+            const g = sub.grades;
+            return (g.exam * w.exam + g.td * w.td + g.tp * w.tp + g.other * w.other) / 100;
+        }
+
+        function saveData() {
+            document.getElementById('saveInd').classList.add('show');
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                localStorage.setItem('calc_plat_data', JSON.stringify(subjects));
+                document.getElementById('saveInd').classList.remove('show');
+                updateStats();
+            }, 600);
+        }
+
+        // ====== RENDERING ======
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (subjects.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-mute);">القائمة فارغة. ابدأ بإضافة مادة.</td></tr>`;
+                return;
+            }
+
+            subjects.forEach((sub, index) => {
+                const tr = document.createElement('tr');
+                
+                const getAttr = (k) => sub.weights[k] > 0 ? '' : 'inp-ghost';
+                const getPh = (k) => sub.weights[k] > 0 ? `${sub.weights[k]}%` : '--';
+                const getVal = (k) => sub.weights[k] > 0 ? (sub.grades[k] || '') : '';
+
+                // Badge Logic
+                let bg = sub.avg >= 10 ? 'var(--success)' : (sub.avg > 0 ? 'var(--danger)' : 'var(--text-mute)');
+                
+                tr.innerHTML = `
+                    <td data-label="#">${index + 1}</td>
+                    <td data-label="المادة"><input type="text" class="inp inp-name" value="${sub.name}" oninput="updName(${sub.id}, this.value)"></td>
+                    <td data-label="المعامل"><input type="number" class="inp" value="${sub.coef}" min="1" oninput="updCoef(${sub.id}, this.value)"></td>
+                    
+                    <td data-label="الامتحان"><input type="text" inputmode="decimal" class="inp" placeholder="${getPh('exam')}" value="${getVal('exam')}" onchange="updGrade(${sub.id}, 'exam', this.value)"></td>
+                    <td data-label="TD"><input type="text" inputmode="decimal" class="inp ${getAttr('td')}" placeholder="${getPh('td')}" value="${getVal('td')}" onchange="updGrade(${sub.id}, 'td', this.value)"></td>
+                    <td data-label="TP"><input type="text" inputmode="decimal" class="inp ${getAttr('tp')}" placeholder="${getPh('tp')}" value="${getVal('tp')}" onchange="updGrade(${sub.id}, 'tp', this.value)"></td>
+                    <td data-label="أخرى"><input type="text" inputmode="decimal" class="inp ${getAttr('other')}" placeholder="${getPh('other')}" value="${getVal('other')}" onchange="updGrade(${sub.id}, 'other', this.value)"></td>
+                    
+                    <td data-label="المعدل">
+                        <span class="avg-badge" style="color: #000; background: ${bg}">${sub.avg.toFixed(2)}</span>
+                    </td>
+                    
+                    <td data-label="تحكم">
+                        <div class="actions">
+                            <button class="icon-btn btn-set" onclick="openSettings(${sub.id})" aria-label="الإعدادات"><i class="fas fa-sliders-h"></i></button>
+                            <button class="icon-btn" onclick="move(${index}, -1)" aria-label="لأعلى"><i class="fas fa-chevron-up"></i></button>
+                            <button class="icon-btn" onclick="move(${index}, 1)" aria-label="لأسفل"><i class="fas fa-chevron-down"></i></button>
+                            <button class="icon-btn btn-del" onclick="delSub(${sub.id})" aria-label="حذف"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateStats() {
+            const len = subjects.length;
+            const passed = subjects.filter(s => s.avg >= 10).length;
+            const avgs = subjects.map(s => s.avg);
+            const max = len ? Math.max(...avgs).toFixed(2) : '0.00';
+            const min = len ? Math.min(...avgs).toFixed(2) : '0.00';
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-val">${len}</div><div class="stat-label">عدد المواد</div></div>
+                <div class="stat-card"><div class="stat-val" style="color:var(--success)">${passed}</div><div class="stat-label">المواد الناجحة</div></div>
+                <div class="stat-card"><div class="stat-val" style="color:var(--primary)">${max}</div><div class="stat-label">أعلى علامة</div></div>
+                <div class="stat-card"><div class="stat-val" style="color:var(--danger)">${min}</div><div class="stat-label">أدنى علامة</div></div>
+            `;
+
+            // Charts
+            const chartCont = document.getElementById('chartsContainer');
+            const chartsArea = document.getElementById('chartsArea');
+            
+            if (len === 0) {
+                chartsArea.style.display = 'none';
+            } else {
+                chartsArea.style.display = 'block';
+                chartCont.innerHTML = '';
+                subjects.forEach(sub => {
+                    const pct = (sub.avg / 20) * 100;
+                    const color = sub.avg >= 10 ? 'var(--success)' : 'var(--danger)';
+                    const row = document.createElement('div');
+                    row.className = 'chart-row';
+                    row.innerHTML = `
+                        <div class="chart-label">${sub.name}</div>
+                        <div class="chart-track" title="${pct.toFixed(1)}%">
+                            <div class="chart-bar" style="width: ${pct}%; background: ${color}"></div>
+                        </div>
+                        <div class="chart-val">${sub.avg.toFixed(2)}</div>
+                    `;
+                    chartCont.appendChild(row);
+                });
+            }
+        }
+
+        // ====== UPDATE FUNCTIONS ======
+        function updName(id, val) { 
+            const sub = subjects.find(s=>s.id===id);
+            if (sub) {
+                sub.name = val; 
+                saveData(); 
+            }
+        }
+        
+        function updCoef(id, val) { 
+            const sub = subjects.find(s=>s.id===id);
+            if (sub) {
+                sub.coef = Math.max(1, parseFloat(val)||1); 
+                saveData(); 
+            }
+        }
+        
+        function updGrade(id, type, val) {
+            const sub = subjects.find(s=>s.id===id);
+            if (sub) {
+                const cleanVal = parseGrade(val);
+                sub.grades[type] = cleanVal;
+                sub.avg = calculateAvg(sub);
+                saveData();
+                renderTable();
+            }
+        }
+
+        // ====== SETTINGS MODAL ======
+        function openSettings(id) {
+            const sub = subjects.find(s => s.id === id);
+            document.getElementById('editId').value = id;
+            
+            const container = document.getElementById('slidersContainer');
+            container.innerHTML = '';
+            
+            ['exam', 'td', 'tp', 'other'].forEach(key => {
+                const val = sub.weights[key];
+                container.innerHTML += `
+                    <div class="slider-row">
+                        <label style="text-transform:uppercase; width:50px;">${key}</label>
+                        <input type="range" id="rg_${key}" min="0" max="100" value="${val}" oninput="syncSl('${key}', this.value)">
+                        <input type="number" id="nb_${key}" class="inp" style="width:60px" min="0" max="100" value="${val}" oninput="syncSl('${key}', this.value)">
+                    </div>
+                `;
+            });
+
+            calcTotalWeight();
+            document.getElementById('settingsModal').style.display = 'flex';
+            setTimeout(()=>document.getElementById('settingsModal').classList.add('active'), 10);
+        }
+
+        function syncSl(key, val) {
+            document.getElementById(`rg_${key}`).value = val;
+            document.getElementById(`nb_${key}`).value = val;
+            calcTotalWeight();
+        }
+
+        function calcTotalWeight() {
+            let total = 0;
+            ['exam','td','tp','other'].forEach(k => total += parseInt(document.getElementById(`rg_${k}`).value)||0);
+            const el = document.getElementById('totalPercent');
+            el.textContent = `المجموع: ${total}%`;
+            el.style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        function saveSettings() {
+            let total = 0;
+            const keys = ['exam','td','tp','other'];
+            keys.forEach(k => total += parseInt(document.getElementById(`rg_${k}`).value)||0);
+            
+            if(total !== 100) { 
+                showToast('يجب أن يكون مجموع النسب 100%', 'error'); 
+                return; 
+            }
+
+            const id = parseInt(document.getElementById('editId').value);
+            const sub = subjects.find(s => s.id === id);
+            
+            keys.forEach(k => sub.weights[k] = parseInt(document.getElementById(`rg_${k}`).value));
+            sub.avg = calculateAvg(sub);
+            
+            saveData();
+            renderTable();
+            closeModal();
+            showToast('تم حفظ الإعدادات', 'success');
+        }
+
+        function closeModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+            setTimeout(()=>document.getElementById('settingsModal').style.display='none', 300);
+        }
+
+        // ====== ACTIONS ======
+        function addSubject() {
+            subjects.push({
+                id: Date.now(), 
+                name: 'مادة جديدة', 
+                coef: 2,
+                weights: {exam:100, td:0, tp:0, other:0},
+                grades: {exam:0, td:0, tp:0, other:0}, 
+                avg: 0
+            });
+            saveData(); 
+            renderTable();
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        function delSub(id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                subjects = subjects.filter(s=>s.id!==id);
+                saveData(); 
+                renderTable();
+            }
+        }
+
+        function move(idx, dir) {
+            if(idx+dir < 0 || idx+dir >= subjects.length) return;
+            [subjects[idx], subjects[idx+dir]] = [subjects[idx+dir], subjects[idx]];
+            saveData(); 
+            renderTable();
+        }
+
+        function resetGradesOnly() {
+            if(confirm('هل تريد مسح جميع الدرجات مع الاحتفاظ بالمواد؟')) {
+                subjects.forEach(s => {
+                    s.grades = {exam:0, td:0, tp:0, other:0};
+                    s.avg = 0;
+                });
+                saveData(); 
+                renderTable();
+                showToast('تم تصفير الدرجات', 'success');
+            }
+        }
+
+        function confirmReset() {
+            if(confirm('تحذير: سيتم حذف جميع المواد والبيانات!')) {
+                subjects = [];
+                saveData(); 
+                renderTable();
+                showToast('تم الحذف الكامل', 'success');
+            }
+        }
+
+        // ====== EXPORT / IMPORT / CALC ======
+        function calculateFinalGPA() {
+            if(!subjects.length) return;
+            let pts=0, coefs=0;
+            subjects.forEach(s => { 
+                pts += s.avg * s.coef; 
+                coefs += s.coef; 
+            });
+            const gpa = coefs ? (pts/coefs).toFixed(2) : "0.00";
+            
+            const msg = `🎓 المعدل التراكمي: ${gpa}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(msg + " - تم حسابه عبر Calculus Platinum")}`;
+            
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `
+                <div>${msg}</div>
+                <a href="${whatsappUrl}" target="_blank" style="color:inherit; margin-right:10px" title="مشاركة عبر واتساب">
+                    <i class="fab fa-whatsapp" style="font-size:1.2rem; color:var(--success)"></i>
+                </a>
+            `;
+            toast.className = 'toast show';
+            toast.style.borderLeft = gpa>=10 ? '4px solid var(--success)' : '4px solid var(--danger)';
+            setTimeout(()=>toast.className='toast', 5000);
+        }
+
+        function exportData() {
+            const data = {
+                subjects: subjects,
+                exportedAt: new Date().toISOString(),
+                version: '1.0.0'
+            };
+            
+            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const a = document.createElement('a');
+            a.href = str; 
+            a.download = `calculus_backup_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a); 
+            a.click(); 
+            a.remove();
+            showToast('تم تصدير البيانات بنجاح', 'success');
+        }
+
+        function importData(input) {
+            if(!input.files[0]) return;
+            const r = new FileReader();
+            r.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    // Support both old and new format
+                    if (Array.isArray(data)) {
+                        subjects = data;
+                    } else if (data.subjects) {
+                        subjects = data.subjects;
+                    }
+                    saveData(); 
+                    renderTable(); 
+                    showToast('تم الاستيراد بنجاح', 'success');
+                } catch(x) { 
+                    showToast('ملف غير صالح', 'error'); 
+                }
+            };
+            r.readAsText(input.files[0]);
+        }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.innerHTML = msg;
+            t.style.borderLeft = type==='error'?'4px solid var(--danger)':'4px solid var(--success)';
+            t.className = 'toast show';
+            setTimeout(()=>t.className='toast', 3000);
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

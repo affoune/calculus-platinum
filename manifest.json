@@ -1,0 +1,23 @@
+{
+  "name": "Calculus Platinum",
+  "short_name": "CalcPlatinum",
+  "description": "حاسبة معدل جامعية متقدمة مع توزيع النسب المئوية",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#09090b",
+  "theme_color": "#00f3ff",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["education", "productivity", "utilities"],
+
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
