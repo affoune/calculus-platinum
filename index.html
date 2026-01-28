@@ -3,37 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CALCULUS PLATINUM - PWA Edition</title>
+    <title>CALCULUS PLATINUM - Local Edition</title>
     
-    <!-- ====== PWA META TAGS ====== -->
+    <!-- ====== META ====== -->
     <meta name="theme-color" content="#00f3ff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Calculus Platinum">
-    <meta name="description" content="حاسبة المعدل الجامعي المتقدمة - تطبيق ويب متقدم">
-    <meta name="keywords" content="GPA, معدل, جامعة, حساب, درجات">
-    <meta name="author" content="Calculus Platinum">
-    
-    <!-- ====== SOCIAL META ====== -->
-    <meta property="og:title" content="Calculus Platinum">
-    <meta property="og:description" content="حاسبة المعدل الجامعي المتقدمة">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://calculus-platinum.app">
-    <meta property="og:image" content="./icon.png">
+    <meta name="description" content="حاسبة المعدل الجامعي المتقدمة">
     
     <!-- ====== ICONS ====== -->
     <link rel="icon" href="./icon.png" type="image/png">
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
     
-    <!-- ====== STYLES & FONTS ====== -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap">
+    <!-- ====== LOCAL ASSETS (تم التعديل للعمل بدون إنترنت) ====== -->
+    <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="./assets/fonts/cairo.css">
     
     <style>
         /* ====== THEME VARIABLES ====== */
         :root {
-            /* Dark Theme (Default) */
             --bg-body: #09090b;
             --bg-panel: #18181b;
             --bg-input: #09090b;
@@ -41,13 +31,12 @@
             --text-main: #fafafa;
             --text-mute: #a1a1aa;
             --shadow: rgba(0,0,0,0.5);
-            
-            /* Accents */
             --primary: #00f3ff;
             --success: #00ff9d;
             --danger: #ff2a6d;
             --warning: #ffde00;
             --glass: rgba(255,255,255,0.03);
+            --info: #006fee;
         }
 
         [data-theme="light"] {
@@ -58,13 +47,12 @@
             --text-main: #18181b;
             --text-mute: #71717a;
             --shadow: rgba(0,0,0,0.1);
-            
-            /* Adjusted Accents for Light Mode */
             --primary: #006fee;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
             --glass: rgba(0,0,0,0.03);
+            --info: #3b82f6;
         }
 
         * { 
@@ -113,6 +101,22 @@
             color: var(--primary); 
         }
         
+        /* زر التثبيت */
+        .install-btn {
+            display: none;
+            background: var(--success);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        /* زر الثيم */
         .theme-toggle {
             background: var(--bg-input); 
             border: 1px solid var(--border-color);
@@ -133,21 +137,6 @@
             transform: rotate(15deg); 
         }
 
-        /* ====== INSTALL BUTTON ====== */
-        .install-btn {
-            display: none;
-            background: var(--success);
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            align-items: center;
-            gap: 8px;
-            margin-left: 10px;
-        }
-
         /* ====== STATS ====== */
         .stats-grid {
             display: grid; 
@@ -166,13 +155,20 @@
         .stat-val { 
             font-size: 2rem; 
             font-weight: 700; 
-            color: var(--primary); 
             line-height: 1.2; 
         }
         .stat-label { 
             font-size: 0.85rem; 
             color: var(--text-mute); 
             font-weight: 500; 
+        }
+        .stat-subject {
+            font-size: 0.8rem;
+            color: var(--text-mute);
+            margin-top: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* ====== CONTROLS ====== */
@@ -196,39 +192,16 @@
             font-size: 0.9rem;
             transition: all 0.2s;
         }
-        .btn:active { 
-            transform: scale(0.96); 
-        }
+        .btn:active { transform: scale(0.96); }
         
-        .btn-primary { 
-            background: var(--primary); 
-            color: #fff; 
-            box-shadow: 0 4px 15px -5px var(--primary); 
-        }
-        .btn-success { 
-            background: var(--success); 
-            color: #fff; 
-            box-shadow: 0 4px 15px -5px var(--success); 
-        }
-        .btn-danger { 
-            background: transparent; 
-            border: 1px solid var(--danger); 
-            color: var(--danger); 
-        }
-        .btn-danger:hover { 
-            background: var(--danger); 
-            color: #fff; 
-        }
-        .btn-secondary { 
-            background: var(--bg-panel); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-main); 
-        }
-        .btn-secondary:hover { 
-            border-color: var(--text-mute); 
-        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px -5px var(--primary); }
+        .btn-success { background: var(--success); color: #fff; box-shadow: 0 4px 15px -5px var(--success); }
+        .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        .btn-secondary { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-secondary:hover { border-color: var(--text-mute); }
 
-        /* ====== TABLE / CARDS ====== */
+        /* ====== TABLE ====== */
         .table-wrapper {
             background: var(--bg-panel); 
             border-radius: 16px; 
@@ -237,10 +210,7 @@
             box-shadow: 0 10px 40px -10px var(--shadow);
         }
         
-        .data-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-        }
+        .data-table { width: 100%; border-collapse: collapse; }
         
         .data-table th {
             background: var(--glass); 
@@ -257,14 +227,10 @@
             border-bottom: 1px solid var(--border-color); 
             vertical-align: middle;
         }
-        .data-table tr:last-child td { 
-            border-bottom: none; 
-        }
-        .data-table tr:hover { 
-            background: var(--glass); 
-        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover { background: var(--glass); }
 
-        /* Inputs */
+        /* Inputs & Static Text */
         .inp {
             background: var(--bg-input); 
             border: 1px solid var(--border-color); 
@@ -276,27 +242,36 @@
             font-size: 0.95rem; 
             font-weight: 500;
         }
-        .inp:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 2px rgba(var(--primary), 0.1); 
+        .inp:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(var(--primary), 0.1); }
+        
+        .inp-ghost { opacity: 0.3; pointer-events: none; border-style: dashed; }
+        
+        .inp-full {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            text-align: right;
         }
-        .inp-name { 
-            width: 100%; 
-            text-align: right; 
-            min-width: 140px; 
+
+        /* النصوص الثابتة (البرتقالي - تم التعديل) */
+        .static-text {
+            display: block;
+            padding: 8px;
+            font-weight: 600;
+            color: var(--text-main);
         }
-        .inp-ghost { 
-            opacity: 0.3; 
-            pointer-events: none; 
-            border-style: dashed; 
+        .static-coef {
+            display: inline-block;
+            padding: 5px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: bold;
+            color: var(--primary);
         }
 
         /* Actions */
-        .actions { 
-            display: flex; 
-            gap: 5px; 
-        }
+        .actions { display: flex; gap: 5px; }
         .icon-btn {
             width: 32px; 
             height: 32px; 
@@ -310,18 +285,9 @@
             justify-content: center;
             transition: 0.2s;
         }
-        .icon-btn:hover { 
-            background: var(--bg-input); 
-            color: var(--text-main); 
-        }
-        .btn-del:hover { 
-            color: var(--danger); 
-            background: rgba(255, 42, 109, 0.1); 
-        }
-        .btn-set:hover { 
-            color: var(--primary); 
-            background: rgba(0, 243, 255, 0.1); 
-        }
+        .icon-btn:hover { background: var(--bg-input); color: var(--text-main); }
+        .btn-del:hover { color: var(--danger); background: rgba(255, 42, 109, 0.1); }
+        .btn-edit:hover { color: var(--primary); background: rgba(0, 243, 255, 0.1); } /* (أخضر - زر التعديل) */
 
         /* Avg Badge */
         .avg-badge {
@@ -343,47 +309,16 @@
             margin-top: 30px; 
             display: none;
         }
-        .chart-row { 
-            display: flex; 
-            align-items: center; 
-            margin-bottom: 12px; 
-            gap: 15px; 
-        }
-        .chart-label { 
-            width: 120px; 
-            font-size: 0.9rem; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-        }
-        .chart-track { 
-            flex: 1; 
-            height: 10px; 
-            background: var(--bg-input); 
-            border-radius: 5px; 
-            overflow: hidden; 
-        }
-        .chart-bar { 
-            height: 100%; 
-            border-radius: 5px; 
-            transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1); 
-        }
-        .chart-val { 
-            width: 40px; 
-            text-align: left; 
-            font-size: 0.85rem; 
-            font-weight: bold; 
-        }
+        .chart-row { display: flex; align-items: center; margin-bottom: 12px; gap: 15px; }
+        .chart-label { width: 120px; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chart-track { flex: 1; height: 10px; background: var(--bg-input); border-radius: 5px; overflow: hidden; }
+        .chart-bar { height: 100%; border-radius: 5px; transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .chart-val { width: 40px; text-align: left; font-size: 0.85rem; font-weight: bold; }
 
-        /* ====== MOBILE CARDS ====== */
+        /* ====== MOBILE ====== */
         @media (max-width: 768px) {
-            .data-table thead { 
-                display: none; 
-            }
-            .data-table, .data-table tbody, .data-table tr, .data-table td { 
-                display: block; 
-                width: 100%; 
-            }
+            .data-table thead { display: none; }
+            .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
             .data-table tr {
                 margin-bottom: 15px; 
                 border: 1px solid var(--border-color);
@@ -400,149 +335,84 @@
                 border-bottom: 1px solid var(--border-color); 
                 text-align: left;
             }
-            .data-table td:last-child { 
-                border-bottom: none; 
-                padding-top: 15px; 
-                justify-content: center; 
-            }
+            .data-table td:last-child { border-bottom: none; padding-top: 15px; justify-content: center; }
             .data-table td::before {
                 content: attr(data-label); 
                 color: var(--text-mute); 
                 font-size: 0.85rem; 
                 font-weight: 600;
             }
-            .inp { 
-                width: 80px; 
-            }
-            .inp-name { 
-                width: 100%; 
-                text-align: right; 
-            }
-            .header {
-                flex-direction: column;
-                gap: 15px;
-            }
+            .inp { width: 80px; }
+            .header { flex-direction: column; gap: 15px; }
+            .controls { gap: 8px; }
+            .btn { padding: 10px 15px; font-size: 0.8rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-card { padding: 15px 10px; }
+            .stat-val { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .btn { justify-content: center; }
         }
 
         /* ====== MODAL ====== */
         .modal-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(4px); 
-            z-index: 1000;
-            display: none; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000;
+            display: none; justify-content: center; align-items: center; padding: 20px;
         }
         .modal-box {
-            background: var(--bg-panel); 
-            padding: 30px; 
-            border-radius: 20px; 
-            width: 400px; 
-            max-width: 100%;
-            border: 1px solid var(--border-color); 
-            box-shadow: 0 20px 50px var(--shadow);
-            transform: translateY(20px); 
-            transition: 0.3s; 
-            opacity: 0;
+            background: var(--bg-panel); padding: 30px; border-radius: 20px; 
+            width: 400px; max-width: 100%;
+            border: 1px solid var(--border-color); box-shadow: 0 20px 50px var(--shadow);
+            transform: translateY(20px); transition: 0.3s; opacity: 0;
         }
-        .modal-overlay.active .modal-box { 
-            transform: translateY(0); 
-            opacity: 1; 
-        }
+        .modal-overlay.active .modal-box { transform: translateY(0); opacity: 1; }
         
-        .slider-row { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            margin-bottom: 15px; 
-        }
-        .slider-row label { 
-            flex: 1; 
-            font-size: 0.9rem; 
-        }
-        input[type="range"] { 
-            flex: 2; 
-            accent-color: var(--primary); 
-            cursor: pointer; 
-        }
+        .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .slider-row label { flex: 1; font-size: 0.9rem; text-transform: uppercase; }
+        input[type="range"] { flex: 2; accent-color: var(--primary); cursor: pointer; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
         /* ====== TOAST & INDICATOR ====== */
         .toast {
-            position: fixed; 
-            bottom: 30px; 
-            left: 50%; 
-            transform: translateX(-50%) translateY(50px);
-            background: var(--bg-panel); 
-            color: var(--text-main); 
-            padding: 12px 25px; 
-            border-radius: 50px;
-            font-weight: 600; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
-            border: 1px solid var(--border-color);
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            opacity: 0; 
-            transition: 0.4s; 
-            z-index: 2000;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px);
+            background: var(--bg-panel); color: var(--text-main); padding: 12px 25px; 
+            border-radius: 50px; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
+            border: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; 
+            opacity: 0; transition: 0.4s; z-index: 2000;
         }
-        .toast.show { 
-            transform: translateX(-50%) translateY(0); 
-            opacity: 1; 
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
         .save-indicator {
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            background: var(--glass);
-            color: var(--success); 
-            padding: 6px 12px; 
-            border-radius: 20px; 
-            border: 1px solid var(--success);
-            font-size: 0.75rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            opacity: 0; 
-            transition: 0.3s;
+            position: fixed; top: 20px; right: 20px; background: var(--glass);
+            color: var(--success); padding: 6px 12px; border-radius: 20px; 
+            border: 1px solid var(--success); font-size: 0.75rem; 
+            display: flex; align-items: center; gap: 6px; opacity: 0; transition: 0.3s;
         }
-        .save-indicator.show { 
-            opacity: 1; 
-        }
+        .save-indicator.show { opacity: 1; }
         .spinner { 
-            width: 10px; 
-            height: 10px; 
-            border: 2px solid currentColor; 
-            border-top-color: transparent; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
+            width: 10px; height: 10px; border: 2px solid currentColor; 
+            border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; 
         }
-        @keyframes spin { 
-            to {
-                transform: rotate(360deg);
-            } 
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* PWA Status */
+        .pwa-status {
+            position: fixed; bottom: 10px; right: 10px; background: var(--bg-panel);
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 5px 10px;
+            font-size: 0.7rem; color: var(--text-mute); display: none;
         }
 
-        /* ====== PWA STATUS ====== */
-        .pwa-status {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px 10px;
-            font-size: 0.7rem;
-            color: var(--text-mute);
-            display: none;
-        }
+        /* Color Gradients */
+        .grade-excellent { background: linear-gradient(135deg, #00ff9d, #00ff00) !important; }
+        .grade-good { background: linear-gradient(135deg, #00ff00, #ffff00) !important; }
+        .grade-average { background: linear-gradient(135deg, #ffff00, #ffa500) !important; }
+        .grade-poor { background: linear-gradient(135deg, #ffa500, #ff0000) !important; }
+        .grade-fail { background: linear-gradient(135deg, #ff0000, #990000) !important; }
+        .grade-empty { background: var(--text-mute) !important; }
     </style>
 </head>
 <body>
@@ -559,7 +429,7 @@
         <header class="header">
             <div class="header-content">
                 <h1>📊 CALCULUS <span>PLATINUM</span></h1>
-                <p style="color: var(--text-mute); font-size: 0.9rem;">تطبيق ويب متقدم لحساب المعدل الجامعي</p>
+                <!-- (أحمر) تم حذف النص الذي كان هنا -->
             </div>
             <div style="display: flex; align-items: center; gap: 10px;">
                 <button class="install-btn" id="installBtn" style="display: none;">
@@ -572,23 +442,23 @@
         </header>
 
         <!-- Stats -->
-        <div class="stats-grid" id="statsGrid">
-            <!-- JS Injected -->
-        </div>
+        <div class="stats-grid" id="statsGrid"></div>
 
         <!-- Controls -->
         <div class="controls">
-            <button class="btn btn-primary" onclick="addSubject()">
-                <i class="fas fa-plus"></i> إضافة مادة
+            <!-- (أحمر) تم حذف زر حساب المعدل المستهدف -->
+            
+            <button class="btn btn-primary" onclick="openSubjectModal()">
+                <i class="fas fa-plus-circle"></i> إضافة مادة جديدة
             </button>
             <button class="btn btn-success" onclick="calculateFinalGPA()">
-                <i class="fas fa-calculator"></i> احسب المعدل
+                <i class="fas fa-calculator"></i> احسب المعدل النهائي
             </button>
             <button class="btn btn-secondary" onclick="exportData()">
-                <i class="fas fa-download"></i> تصدير
+                <i class="fas fa-download"></i> تصدير البيانات
             </button>
             <button class="btn btn-secondary" onclick="document.getElementById('impFile').click()">
-                <i class="fas fa-upload"></i> استيراد
+                <i class="fas fa-upload"></i> استيراد بيانات
             </button>
             <input type="file" id="impFile" hidden accept=".json" onchange="importData(this)">
             
@@ -616,9 +486,7 @@
                         <th width="9%">تحكم</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    <!-- JS Injected -->
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
 
@@ -629,24 +497,45 @@
             </h3>
             <div id="chartsContainer"></div>
         </div>
+
+        <!-- Critical Subjects Warning -->
+        <div id="criticalWarning" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 42, 109, 0.1); border: 1px solid var(--danger); border-radius: 12px; color: var(--danger);">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="criticalCount">0</span> مادة تحتاج تحسين (معدل أقل من 10)
+        </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
-    <div class="modal-overlay" id="settingsModal">
+    <!-- SUBJECT MODAL (ADD & EDIT) (أخضر - نافذة موحدة) -->
+    <div class="modal-overlay" id="subjectModal">
         <div class="modal-box">
-            <h3 style="margin-bottom: 20px;">ضبط الأوزان (Weights)</h3>
-            <input type="hidden" id="editId">
+            <h3 style="margin-bottom: 20px;" id="modalTitle"><i class="fas fa-plus-circle"></i> إضافة مادة جديدة</h3>
+            <input type="hidden" id="editSubjectId"> <!-- لتخزين معرف المادة عند التعديل -->
             
-            <!-- Dynamic Sliders generated by JS -->
-            <div id="slidersContainer"></div>
-
-            <div style="margin: 20px 0; padding: 10px; background: var(--bg-input); border-radius: 8px; text-align: center;">
-                <span id="totalPercent" style="font-weight: bold;">0%</span>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--text-mute);">اسم المادة</label>
+                <input type="text" id="subjectName" class="inp inp-full" placeholder="أدخل اسم المادة">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--text-mute);">المعامل</label>
+                <input type="number" id="subjectCoef" class="inp inp-full" value="2" min="1" max="10">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--text-mute);">توزيع النسب المئوية</label>
+                <div id="subjectSliders"></div>
+                <div style="margin-top: 10px; padding: 10px; background: var(--bg-input); border-radius: 8px; text-align: center;">
+                    <span id="subjectTotalPercent" style="font-weight: bold;">100%</span>
+                </div>
             </div>
 
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="saveSettings()">حفظ</button>
-                <button class="btn btn-secondary" style="flex: 1; justify-content: center;" onclick="closeModal()">إلغاء</button>
+            <div class="modal-actions">
+                <button class="btn btn-success" style="flex: 1; justify-content: center;" onclick="saveSubjectFromModal()">
+                    <i class="fas fa-check"></i> حفظ
+                </button>
+                <button class="btn btn-secondary" style="flex: 1; justify-content: center;" onclick="closeModal('subjectModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
             </div>
         </div>
     </div>
@@ -672,6 +561,8 @@
             renderTable();
             updateStats();
             initPWA();
+            initSubjectModalUI(); // تهيئة واجهة المودال
+            checkCriticalSubjects();
         };
 
         // ====== THEME SYSTEM ======
@@ -689,74 +580,28 @@
 
         // ====== PWA FUNCTIONS ======
         function initPWA() {
-            // Update PWA status
             updatePWAStatus();
+            window.addEventListener('online', () => { showToast('🟢 الاتصال بالإنترنت معاد', 'success'); updatePWAStatus(); });
+            window.addEventListener('offline', () => { showToast('🔴 أنت غير متصل بالإنترنت', 'warning'); updatePWAStatus(); });
             
-            // Listen for online/offline events
-            window.addEventListener('online', () => {
-                showToast('🟢 الاتصال بالإنترنت معاد', 'success');
-                updatePWAStatus();
-            });
-            
-            window.addEventListener('offline', () => {
-                showToast('🔴 أنت غير متصل بالإنترنت', 'warning');
-                updatePWAStatus();
-            });
-            
-            // Register service worker
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('✅ Service Worker registered:', registration.scope);
-                        updatePWAStatus('Service Worker: نشط');
-                        
-                        // Check for updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed') {
-                                    showToast('🔥 نسخة جديدة متاحة!', 'success');
-                                }
-                            });
-                        });
-                    })
-                    .catch(error => {
-                        console.log('❌ Service Worker registration failed:', error);
-                        updatePWAStatus('Service Worker: فشل');
-                    });
+                    .then(r => updatePWAStatus('Service Worker: نشط'))
+                    .catch(e => updatePWAStatus('Service Worker: فشل'));
             }
             
-            // Handle install prompt
             let deferredPrompt;
             const installBtn = document.getElementById('installBtn');
-            
             window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installBtn.style.display = 'flex';
-                
+                e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex';
                 installBtn.addEventListener('click', () => {
                     deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            showToast('✅ تم تثبيت التطبيق!', 'success');
-                            installBtn.style.display = 'none';
-                        }
+                    deferredPrompt.userChoice.then((res) => {
+                        if (res.outcome === 'accepted') installBtn.style.display = 'none';
                         deferredPrompt = null;
                     });
                 });
             });
-            
-            // Check if app is already installed
-            window.addEventListener('appinstalled', () => {
-                installBtn.style.display = 'none';
-                updatePWAStatus('التطبيق مثبت');
-            });
-            
-            // Detect standalone mode
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                updatePWAStatus('وضع التطبيق: مثبت');
-            }
         }
 
         function updatePWAStatus(status = '') {
@@ -770,7 +615,38 @@
             statusEl.style.display = 'block';
         }
 
-        // ====== LOGIC: SANITIZATION & CALCULATION ======
+        // ====== INIT MODAL UI ======
+        function initSubjectModalUI() {
+            const container = document.getElementById('subjectSliders');
+            const weights = {exam:60, td:30, tp:10, other:0};
+            container.innerHTML = ''; // تنظيف
+            
+            ['exam', 'td', 'tp', 'other'].forEach(key => {
+                container.innerHTML += `
+                    <div class="slider-row">
+                        <label style="text-transform:uppercase; width:50px;">${key}</label>
+                        <input type="range" id="sl_rg_${key}" min="0" max="100" value="0" oninput="syncModalSl('${key}', this.value)">
+                        <input type="number" id="sl_nb_${key}" class="inp" style="width:60px" min="0" max="100" value="0" oninput="syncModalSl('${key}', this.value)">
+                    </div>
+                `;
+            });
+        }
+
+        function syncModalSl(key, val) {
+            document.getElementById(`sl_rg_${key}`).value = val;
+            document.getElementById(`sl_nb_${key}`).value = val;
+            calcModalTotalWeight();
+        }
+
+        function calcModalTotalWeight() {
+            let total = 0;
+            ['exam','td','tp','other'].forEach(k => total += parseInt(document.getElementById(`sl_rg_${k}`).value)||0);
+            const el = document.getElementById('subjectTotalPercent');
+            el.textContent = `المجموع: ${total}%`;
+            el.style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        // ====== LOGIC ======
         function parseGrade(val) {
             if(val === '') return 0;
             let str = val.toString().replace(',', '.');
@@ -782,7 +658,17 @@
         function calculateAvg(sub) {
             const w = sub.weights;
             const g = sub.grades;
-            return (g.exam * w.exam + g.td * w.td + g.tp * w.tp + g.other * w.other) / 100;
+            const total = (g.exam * w.exam + g.td * w.td + g.tp * w.tp + g.other * w.other) / 100;
+            return Math.min(20, Math.max(0, total));
+        }
+
+        function getGradeColor(avg) {
+            if(avg >= 16) return 'grade-excellent';
+            if(avg >= 14) return 'grade-good';
+            if(avg >= 12) return 'grade-average';
+            if(avg >= 10) return 'grade-poor';
+            if(avg > 0) return 'grade-fail';
+            return 'grade-empty';
         }
 
         function saveData() {
@@ -792,16 +678,20 @@
                 localStorage.setItem('calc_plat_data', JSON.stringify(subjects));
                 document.getElementById('saveInd').classList.remove('show');
                 updateStats();
+                checkCriticalSubjects();
             }, 600);
         }
 
-        // ====== RENDERING ======
+        // ====== RENDERING (TABLE) ======
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
 
             if (subjects.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-mute);">القائمة فارغة. ابدأ بإضافة مادة.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-mute);">
+                    <i class="fas fa-book-open" style="font-size:2rem; margin-bottom:10px; display:block;"></i>
+                    القائمة فارغة. ابدأ بإضافة مادة جديدة.
+                </td></tr>`;
                 return;
             }
 
@@ -812,29 +702,59 @@
                 const getPh = (k) => sub.weights[k] > 0 ? `${sub.weights[k]}%` : '--';
                 const getVal = (k) => sub.weights[k] > 0 ? (sub.grades[k] || '') : '';
 
-                // Badge Logic
-                let bg = sub.avg >= 10 ? 'var(--success)' : (sub.avg > 0 ? 'var(--danger)' : 'var(--text-mute)');
+                const colorClass = getGradeColor(sub.avg);
+                const displayAvg = sub.avg > 0 ? sub.avg.toFixed(2) : '0.00';
                 
                 tr.innerHTML = `
                     <td data-label="#">${index + 1}</td>
-                    <td data-label="المادة"><input type="text" class="inp inp-name" value="${sub.name}" oninput="updName(${sub.id}, this.value)"></td>
-                    <td data-label="المعامل"><input type="number" class="inp" value="${sub.coef}" min="1" oninput="updCoef(${sub.id}, this.value)"></td>
+                    <!-- (برتقالي) الاسم ثابت الآن -->
+                    <td data-label="المادة">
+                        <span class="static-text">${sub.name}</span>
+                    </td>
+                    <!-- (برتقالي) المعامل ثابت الآن -->
+                    <td data-label="المعامل">
+                        <span class="static-coef">${sub.coef}</span>
+                    </td>
                     
-                    <td data-label="الامتحان"><input type="text" inputmode="decimal" class="inp" placeholder="${getPh('exam')}" value="${getVal('exam')}" onchange="updGrade(${sub.id}, 'exam', this.value)"></td>
-                    <td data-label="TD"><input type="text" inputmode="decimal" class="inp ${getAttr('td')}" placeholder="${getPh('td')}" value="${getVal('td')}" onchange="updGrade(${sub.id}, 'td', this.value)"></td>
-                    <td data-label="TP"><input type="text" inputmode="decimal" class="inp ${getAttr('tp')}" placeholder="${getPh('tp')}" value="${getVal('tp')}" onchange="updGrade(${sub.id}, 'tp', this.value)"></td>
-                    <td data-label="أخرى"><input type="text" inputmode="decimal" class="inp ${getAttr('other')}" placeholder="${getPh('other')}" value="${getVal('other')}" onchange="updGrade(${sub.id}, 'other', this.value)"></td>
+                    <td data-label="الامتحان">
+                        <input type="text" inputmode="decimal" class="inp" 
+                               placeholder="${getPh('exam')}" value="${getVal('exam')}" 
+                               onchange="updGrade(${sub.id}, 'exam', this.value)">
+                    </td>
+                    <td data-label="TD">
+                        <input type="text" inputmode="decimal" class="inp ${getAttr('td')}" 
+                               placeholder="${getPh('td')}" value="${getVal('td')}" 
+                               onchange="updGrade(${sub.id}, 'td', this.value)">
+                    </td>
+                    <td data-label="TP">
+                        <input type="text" inputmode="decimal" class="inp ${getAttr('tp')}" 
+                               placeholder="${getPh('tp')}" value="${getVal('tp')}" 
+                               onchange="updGrade(${sub.id}, 'tp', this.value)">
+                    </td>
+                    <td data-label="أخرى">
+                        <input type="text" inputmode="decimal" class="inp ${getAttr('other')}" 
+                               placeholder="${getPh('other')}" value="${getVal('other')}" 
+                               onchange="updGrade(${sub.id}, 'other', this.value)">
+                    </td>
                     
                     <td data-label="المعدل">
-                        <span class="avg-badge" style="color: #000; background: ${bg}">${sub.avg.toFixed(2)}</span>
+                        <span class="avg-badge ${colorClass}" style="color: #000;">
+                            ${displayAvg}
+                        </span>
                     </td>
                     
                     <td data-label="تحكم">
                         <div class="actions">
-                            <button class="icon-btn btn-set" onclick="openSettings(${sub.id})" aria-label="الإعدادات"><i class="fas fa-sliders-h"></i></button>
-                            <button class="icon-btn" onclick="move(${index}, -1)" aria-label="لأعلى"><i class="fas fa-chevron-up"></i></button>
-                            <button class="icon-btn" onclick="move(${index}, 1)" aria-label="لأسفل"><i class="fas fa-chevron-down"></i></button>
-                            <button class="icon-btn btn-del" onclick="delSub(${sub.id})" aria-label="حذف"><i class="fas fa-trash-alt"></i></button>
+                            <!-- (أخضر) زر التعديل الجديد (قلم) -->
+                            <button class="icon-btn btn-edit" onclick="openSubjectModal(${sub.id})" 
+                                    aria-label="تعديل" title="تعديل المادة">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <!-- أزرار الترتيب -->
+                            <button class="icon-btn" onclick="move(${index}, -1)" title="لأعلى"><i class="fas fa-chevron-up"></i></button>
+                            <button class="icon-btn" onclick="move(${index}, 1)" title="لأسفل"><i class="fas fa-chevron-down"></i></button>
+                            <!-- زر الحذف -->
+                            <button class="icon-btn btn-del" onclick="delSub(${sub.id})" title="حذف"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </td>
                 `;
@@ -845,21 +765,36 @@
         function updateStats() {
             const len = subjects.length;
             const passed = subjects.filter(s => s.avg >= 10).length;
-            const avgs = subjects.map(s => s.avg);
-            const max = len ? Math.max(...avgs).toFixed(2) : '0.00';
-            const min = len ? Math.min(...avgs).toFixed(2) : '0.00';
+            let highest = null, lowest = null;
+            if (len > 0) {
+                highest = subjects.reduce((a, b) => a.avg > b.avg ? a : b);
+                lowest = subjects.reduce((a, b) => a.avg < b.avg ? a : b);
+            }
 
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-val">${len}</div><div class="stat-label">عدد المواد</div></div>
-                <div class="stat-card"><div class="stat-val" style="color:var(--success)">${passed}</div><div class="stat-label">المواد الناجحة</div></div>
-                <div class="stat-card"><div class="stat-val" style="color:var(--primary)">${max}</div><div class="stat-label">أعلى علامة</div></div>
-                <div class="stat-card"><div class="stat-val" style="color:var(--danger)">${min}</div><div class="stat-label">أدنى علامة</div></div>
+                <div class="stat-card">
+                    <div class="stat-val" style="color:var(--primary)">${len}</div>
+                    <div class="stat-label">عدد المواد</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" style="color:var(--success)">${passed}</div>
+                    <div class="stat-label">المواد الناجحة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" style="color:var(--success)">${highest ? highest.avg.toFixed(2) : '0.00'}</div>
+                    <div class="stat-label">أعلى علامة</div>
+                    <div class="stat-subject">${highest ? highest.name : '--'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" style="color:var(--danger)">${lowest ? lowest.avg.toFixed(2) : '0.00'}</div>
+                    <div class="stat-label">أدنى علامة</div>
+                    <div class="stat-subject">${lowest ? lowest.name : '--'}</div>
+                </div>
             `;
-
+            
             // Charts
             const chartCont = document.getElementById('chartsContainer');
             const chartsArea = document.getElementById('chartsArea');
-            
             if (len === 0) {
                 chartsArea.style.display = 'none';
             } else {
@@ -868,204 +803,187 @@
                 subjects.forEach(sub => {
                     const pct = (sub.avg / 20) * 100;
                     const color = sub.avg >= 10 ? 'var(--success)' : 'var(--danger)';
-                    const row = document.createElement('div');
-                    row.className = 'chart-row';
-                    row.innerHTML = `
-                        <div class="chart-label">${sub.name}</div>
-                        <div class="chart-track" title="${pct.toFixed(1)}%">
-                            <div class="chart-bar" style="width: ${pct}%; background: ${color}"></div>
-                        </div>
-                        <div class="chart-val">${sub.avg.toFixed(2)}</div>
-                    `;
-                    chartCont.appendChild(row);
+                    chartCont.innerHTML += `
+                        <div class="chart-row">
+                            <div class="chart-label" title="${sub.name}">${sub.name}</div>
+                            <div class="chart-track" title="${pct.toFixed(1)}%">
+                                <div class="chart-bar" style="width: ${pct}%; background: ${color}"></div>
+                            </div>
+                            <div class="chart-val">${sub.avg.toFixed(2)}</div>
+                        </div>`;
                 });
             }
         }
 
-        // ====== UPDATE FUNCTIONS ======
-        function updName(id, val) { 
-            const sub = subjects.find(s=>s.id===id);
-            if (sub) {
-                sub.name = val; 
-                saveData(); 
+        function checkCriticalSubjects() {
+            const critical = subjects.filter(s => s.avg < 10 && s.avg > 0);
+            const warningEl = document.getElementById('criticalWarning');
+            if (critical.length > 0) {
+                warningEl.style.display = 'block';
+                document.getElementById('criticalCount').textContent = critical.length;
+                setTimeout(() => warningEl.style.display = 'none', 10000);
+            } else {
+                warningEl.style.display = 'none';
             }
         }
-        
-        function updCoef(id, val) { 
-            const sub = subjects.find(s=>s.id===id);
-            if (sub) {
-                sub.coef = Math.max(1, parseFloat(val)||1); 
-                saveData(); 
-            }
-        }
-        
+
         function updGrade(id, type, val) {
             const sub = subjects.find(s=>s.id===id);
-            if (sub) {
-                const cleanVal = parseGrade(val);
-                sub.grades[type] = cleanVal;
+            if (sub && sub.weights[type] > 0) {
+                sub.grades[type] = parseGrade(val);
                 sub.avg = calculateAvg(sub);
                 saveData();
                 renderTable();
             }
         }
 
-        // ====== SETTINGS MODAL ======
-        function openSettings(id) {
-            const sub = subjects.find(s => s.id === id);
-            document.getElementById('editId').value = id;
+        // ====== MODAL LOGIC (ADD / EDIT) ======
+        // (أخضر) دالة لفتح النافذة (فارغة للإضافة، أو مملوءة للتعديل)
+        function openSubjectModal(editId = null) {
+            const isEdit = editId !== null;
+            document.getElementById('modalTitle').innerHTML = isEdit ? 
+                '<i class="fas fa-edit"></i> تعديل المادة' : 
+                '<i class="fas fa-plus-circle"></i> إضافة مادة جديدة';
             
-            const container = document.getElementById('slidersContainer');
-            container.innerHTML = '';
-            
-            ['exam', 'td', 'tp', 'other'].forEach(key => {
-                const val = sub.weights[key];
-                container.innerHTML += `
-                    <div class="slider-row">
-                        <label style="text-transform:uppercase; width:50px;">${key}</label>
-                        <input type="range" id="rg_${key}" min="0" max="100" value="${val}" oninput="syncSl('${key}', this.value)">
-                        <input type="number" id="nb_${key}" class="inp" style="width:60px" min="0" max="100" value="${val}" oninput="syncSl('${key}', this.value)">
-                    </div>
-                `;
-            });
+            document.getElementById('editSubjectId').value = isEdit ? editId : '';
 
-            calcTotalWeight();
-            document.getElementById('settingsModal').style.display = 'flex';
-            setTimeout(()=>document.getElementById('settingsModal').classList.add('active'), 10);
-        }
-
-        function syncSl(key, val) {
-            document.getElementById(`rg_${key}`).value = val;
-            document.getElementById(`nb_${key}`).value = val;
-            calcTotalWeight();
-        }
-
-        function calcTotalWeight() {
-            let total = 0;
-            ['exam','td','tp','other'].forEach(k => total += parseInt(document.getElementById(`rg_${k}`).value)||0);
-            const el = document.getElementById('totalPercent');
-            el.textContent = `المجموع: ${total}%`;
-            el.style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
-        }
-
-        function saveSettings() {
-            let total = 0;
-            const keys = ['exam','td','tp','other'];
-            keys.forEach(k => total += parseInt(document.getElementById(`rg_${k}`).value)||0);
-            
-            if(total !== 100) { 
-                showToast('يجب أن يكون مجموع النسب 100%', 'error'); 
-                return; 
+            if (isEdit) {
+                // وضع التعديل: ملء البيانات
+                const sub = subjects.find(s => s.id === editId);
+                document.getElementById('subjectName').value = sub.name;
+                document.getElementById('subjectCoef').value = sub.coef;
+                ['exam', 'td', 'tp', 'other'].forEach(key => {
+                    syncModalSl(key, sub.weights[key]);
+                });
+            } else {
+                // وضع الإضافة: تصفير
+                document.getElementById('subjectName').value = '';
+                document.getElementById('subjectCoef').value = 2;
+                // افتراضي
+                syncModalSl('exam', 60); syncModalSl('td', 30); syncModalSl('tp', 10); syncModalSl('other', 0);
             }
-
-            const id = parseInt(document.getElementById('editId').value);
-            const sub = subjects.find(s => s.id === id);
             
-            keys.forEach(k => sub.weights[k] = parseInt(document.getElementById(`rg_${k}`).value));
-            sub.avg = calculateAvg(sub);
-            
-            saveData();
-            renderTable();
-            closeModal();
-            showToast('تم حفظ الإعدادات', 'success');
+            calcModalTotalWeight();
+            openModal('subjectModal');
         }
 
-        function closeModal() {
-            document.getElementById('settingsModal').classList.remove('active');
-            setTimeout(()=>document.getElementById('settingsModal').style.display='none', 300);
+        function saveSubjectFromModal() {
+            let total = 0;
+            const weights = {};
+            const keys = ['exam','td','tp','other'];
+            
+            keys.forEach(k => {
+                const val = parseInt(document.getElementById(`sl_rg_${k}`).value) || 0;
+                weights[k] = val;
+                total += val;
+            });
+            
+            if(total !== 100) { showToast('يجب أن يكون مجموع النسب 100%', 'error'); return; }
+
+            const name = document.getElementById('subjectName').value.trim() || 'مادة جديدة';
+            const coef = Math.max(1, Math.min(10, parseInt(document.getElementById('subjectCoef').value) || 2));
+            const editId = document.getElementById('editSubjectId').value;
+
+            if (editId) {
+                // (أخضر) حفظ التعديل
+                const sub = subjects.find(s => s.id == editId);
+                if (sub) {
+                    sub.name = name;
+                    sub.coef = coef;
+                    sub.weights = weights;
+                    sub.avg = calculateAvg(sub); // إعادة حساب المعدل في حال تغيرت الأوزان
+                    showToast('تم تعديل المادة بنجاح', 'success');
+                }
+            } else {
+                // (أخضر) حفظ جديد
+                subjects.push({
+                    id: Date.now(), name: name, coef: coef, weights: weights,
+                    grades: {exam:0, td:0, tp:0, other:0}, avg: 0
+                });
+                showToast(`تم إضافة مادة "${name}"`, 'success');
+            }
+            
+            saveData(); 
+            renderTable();
+            closeModal('subjectModal');
+        }
+
+        // ====== MODAL UTILITIES ======
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
         }
 
         // ====== ACTIONS ======
-        function addSubject() {
-            subjects.push({
-                id: Date.now(), 
-                name: 'مادة جديدة', 
-                coef: 2,
-                weights: {exam:100, td:0, tp:0, other:0},
-                grades: {exam:0, td:0, tp:0, other:0}, 
-                avg: 0
-            });
-            saveData(); 
-            renderTable();
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
         function delSub(id) {
-            if(confirm('هل أنت متأكد من الحذف؟')) {
-                subjects = subjects.filter(s=>s.id!==id);
-                saveData(); 
-                renderTable();
+            if(confirm('هل أنت متأكد من حذف هذه المادة؟')) {
+                subjects = subjects.filter(s => s.id !== id);
+                saveData(); renderTable(); showToast('تم حذف المادة', 'success');
             }
         }
 
         function move(idx, dir) {
-            if(idx+dir < 0 || idx+dir >= subjects.length) return;
-            [subjects[idx], subjects[idx+dir]] = [subjects[idx+dir], subjects[idx]];
-            saveData(); 
-            renderTable();
+            if(idx + dir < 0 || idx + dir >= subjects.length) return;
+            [subjects[idx], subjects[idx + dir]] = [subjects[idx + dir], subjects[idx]];
+            saveData(); renderTable();
         }
 
         function resetGradesOnly() {
-            if(confirm('هل تريد مسح جميع الدرجات مع الاحتفاظ بالمواد؟')) {
-                subjects.forEach(s => {
-                    s.grades = {exam:0, td:0, tp:0, other:0};
-                    s.avg = 0;
-                });
-                saveData(); 
-                renderTable();
-                showToast('تم تصفير الدرجات', 'success');
+            if(!subjects.length) return;
+            if(confirm('هل تريد مسح جميع الدرجات؟')) {
+                subjects.forEach(s => { s.grades = {exam:0, td:0, tp:0, other:0}; s.avg = 0; });
+                saveData(); renderTable(); showToast('تم تصفير الدرجات', 'success');
             }
         }
 
         function confirmReset() {
+            if(!subjects.length) return;
             if(confirm('تحذير: سيتم حذف جميع المواد والبيانات!')) {
-                subjects = [];
-                saveData(); 
-                renderTable();
-                showToast('تم الحذف الكامل', 'success');
+                subjects = []; saveData(); renderTable(); showToast('تم حذف البيانات', 'success');
             }
         }
 
-        // ====== EXPORT / IMPORT / CALC ======
+        // ====== CALCULATE / EXPORT ======
         function calculateFinalGPA() {
-            if(!subjects.length) return;
-            let pts=0, coefs=0;
-            subjects.forEach(s => { 
-                pts += s.avg * s.coef; 
-                coefs += s.coef; 
-            });
-            const gpa = coefs ? (pts/coefs).toFixed(2) : "0.00";
-            
-            const msg = `🎓 المعدل التراكمي: ${gpa}`;
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(msg + " - تم حسابه عبر Calculus Platinum")}`;
+            if(!subjects.length) { showToast('أضف مواد أولاً', 'warning'); return; }
+            let pts = 0, coefs = 0;
+            subjects.forEach(s => { pts += s.avg * s.coef; coefs += s.coef; });
+            const gpa = coefs ? (pts / coefs).toFixed(2) : "0.00";
             
             const toast = document.getElementById('toast');
             toast.innerHTML = `
-                <div>${msg}</div>
-                <a href="${whatsappUrl}" target="_blank" style="color:inherit; margin-right:10px" title="مشاركة عبر واتساب">
-                    <i class="fab fa-whatsapp" style="font-size:1.2rem; color:var(--success)"></i>
-                </a>
-            `;
+                <div style="text-align: right;">
+                    <div style="font-size: 1.1rem; margin-bottom: 5px; color: ${gpa >= 10 ? 'var(--success)' : 'var(--danger)'}">
+                        <strong>المعدل النهائي: ${gpa}</strong>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-mute);">
+                        ${subjects.length} مادة | ${subjects.filter(s => s.avg >= 10).length} ناجحة
+                    </div>
+                </div>`;
+            if (navigator.onLine) {
+                const msg = `🎓 المعدل التراكمي: ${gpa}\nعبر Calculus Platinum`;
+                toast.innerHTML += `<a href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" style="color:inherit; margin-right:10px"><i class="fab fa-whatsapp" style="font-size:1.2rem; color:var(--success)"></i></a>`;
+            }
             toast.className = 'toast show';
-            toast.style.borderLeft = gpa>=10 ? '4px solid var(--success)' : '4px solid var(--danger)';
-            setTimeout(()=>toast.className='toast', 5000);
+            toast.style.borderLeft = gpa >= 10 ? '4px solid var(--success)' : '4px solid var(--danger)';
+            setTimeout(() => toast.className = 'toast', 5000);
         }
 
         function exportData() {
-            const data = {
-                subjects: subjects,
-                exportedAt: new Date().toISOString(),
-                version: '1.0.0'
-            };
-            
-            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            if(!subjects.length) return;
+            const data = { subjects: subjects, exportedAt: new Date().toISOString() };
+            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
             const a = document.createElement('a');
-            a.href = str; 
-            a.download = `calculus_backup_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a); 
-            a.click(); 
-            a.remove();
-            showToast('تم تصدير البيانات بنجاح', 'success');
+            a.href = str; a.download = `calculus_backup.json`;
+            document.body.appendChild(a); a.click(); a.remove();
+            showToast('تم التصدير', 'success');
         }
 
         function importData(input) {
@@ -1074,35 +992,26 @@
             r.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    // Support both old and new format
-                    if (Array.isArray(data)) {
-                        subjects = data;
-                    } else if (data.subjects) {
-                        subjects = data.subjects;
-                    }
-                    saveData(); 
-                    renderTable(); 
-                    showToast('تم الاستيراد بنجاح', 'success');
-                } catch(x) { 
-                    showToast('ملف غير صالح', 'error'); 
-                }
+                    subjects = data.subjects || data;
+                    subjects.forEach(sub => { if(!sub.avg) sub.avg = calculateAvg(sub); });
+                    saveData(); renderTable(); showToast('تم الاستيراد', 'success');
+                } catch(x) { showToast('ملف غير صالح', 'error'); }
             };
             r.readAsText(input.files[0]);
         }
 
         function showToast(msg, type) {
             const t = document.getElementById('toast');
-            t.innerHTML = msg;
-            t.style.borderLeft = type==='error'?'4px solid var(--danger)':'4px solid var(--success)';
+            t.textContent = msg;
+            t.style.borderLeft = type === 'error' ? '4px solid var(--danger)' : 
+                               type === 'warning' ? '4px solid var(--warning)' : 
+                               '4px solid var(--success)';
             t.className = 'toast show';
-            setTimeout(()=>t.className='toast', 3000);
+            setTimeout(() => t.className = 'toast', 3000);
         }
 
-        // Close modal on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                closeModal();
-            }
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
         }
     </script>
 </body>
