@@ -9,8 +9,8 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png',
-  './icon-192.png',
+  './icon-v2.png',
+  './icon-192-v2.png',
 
   // --- ملفات الـ CSS المحلية ---
   './assets/fonts/cairo.css',
@@ -75,3 +75,4 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
