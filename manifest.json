@@ -4,7 +4,7 @@
   "description": "حاسبة معدل جامعية متقدمة تعمل بدون إنترنت",
   "start_url": "./index.html",
   "scope": "./",
-  "id": "com.calculus.platinum.v2",
+  "id": "com.calculus.platinum.v3",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#09090b",
@@ -21,10 +21,11 @@
       "purpose": "any maskable"
     },
     {
-      "src": "./icon-v2.png",
+      "src": "./icon-v3.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ]
 }
+
