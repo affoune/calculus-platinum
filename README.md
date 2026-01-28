@@ -1,6 +1,6 @@
 # 🏆 Calculus Platinum - GPA Calculator
 
-![Calculus Platinum Icon](./icon.png)
+![Calculus Platinum Icon](./icon-v2.png)
 
 **تطبيق ويب متقدم لحساب المعدل الجامعي يعمل محلياً بالكامل (Offline First)**
 
@@ -33,3 +33,4 @@ Calculus-Platinum/
 └── assets/             (الموارد المحلية)
     ├── fonts/          (خطوط Cairo)
     └── fontawesome/    (الأيقونات)
+
