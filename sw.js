@@ -2,7 +2,7 @@
    🏆 Calculus Platinum Service Worker (Final Offline)
    =========================================================== */
 
-const CACHE_NAME = 'calc-platinum-v3'; // تحديث الإصدار
+const CACHE_NAME = 'calc-platinum-v4'; // تحديث الإصدار
 
 // قائمة الملفات (تم حذف offline.html منها)
 const ASSETS_TO_CACHE = [
@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json',
   './icon-v3.png',
-  './icon-192-v2.png',
+  './icon-192-v3.png',
 
   // --- ملفات الـ CSS المحلية ---
   './assets/fonts/cairo.css',
@@ -75,5 +75,6 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
 
 
